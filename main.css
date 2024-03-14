@@ -1,0 +1,92 @@
+body {
+  height: 50vh;
+  display: flex;
+  justify-content: space-around;
+  font-family: sans-serif;
+}
+
+.tabla {
+  background-color: #ffffff; /* Fondo blanco para la tabla */
+  color: #333; /* Color de texto oscuro */
+}
+
+thead {
+  background-color: #88e784; /* Verde claro para el encabezado de la tabla */
+}
+
+tr:nth-child(even) {
+  background-color: #e6ffed; /* Verde claro para filas pares */
+}
+
+tr:hover td {
+  background-color: #88e784; /* Verde más oscuro al pasar el mouse */
+  color: white; /* Texto blanco al pasar el mouse */
+}
+
+.labelOrd {
+  color: #0B150B; /* Verde para los botones */
+  /* Borde verde para los botones */
+}
+
+.labelOrd::before {
+  border: 3px solid #88e784; /* Borde verde para el círculo del botón */
+}
+
+.labelOrd:hover input~.checkmark {
+  background-color: #88e784; /* Verde más oscuro al pasar el mouse */
+  border-color: #88e784; /* Borde verde más oscuro al pasar el mouse */
+}
+
+.labelOrd input:checked~.label,
+.labelOrd input:checked~.checkmark {
+  background-color: #88e784; /* Verde oscuro para el botón seleccionado */
+  border-color: #88e784; /* Borde verde oscuro para el botón seleccionado */
+}
+
+.container .box {
+  background-color: #ffffff; /* Fondo blanco para el fondo del contenedor */
+}
+
+.container .box #selecProgramas {
+  background-color: #88e784; /* Verde para el botón de selección de programas */
+}
+
+button {
+  width: 120px; /* Ajuste del ancho del botón */
+  height: 40px; /* Ajuste del alto del botón */
+  background-color: #A6DCA4; /* Verde para los botones */
+}
+
+#tamaño {
+  margin-top: 20px;
+}
+
+.box {
+   
+  padding: 10px;
+  color: #1D211F; /* Cambiada la letra a un tono más claro */
+  overflow-y: scroll;
+  text-align: center;
+  font-size: 14px; /* Tamaño de fuente reducido */
+}
+
+.container {
+  grid-template-columns: repeat(3, 1fr);
+  display: grid;
+  column-gap: 10px;
+  height: 98vh;
+  width: 100%;
+}
+
+.memoria {
+  text-align: center;
+  display: flex;
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.ordenamiento {
+  text-align: left; /* Alinear contenido a la izquierda */
+}
