@@ -122,31 +122,6 @@ class Memoria {
     }
 
     insertarProceso(proceso, metodo, seleccionAjuste) {
-        /// Paginacion
-        if (metodo == 6) {
-            if (this.getMemoriaDisponible() == 0) {
-                return 0;
-            }
-            if (this.getMemoriaDisponible() < proceso.tamano) {
-                return 1;
-            }
-
-            var procesoPaginado = this.paginarProceso(proceso, this.segmentos[0].tamano);
-            return this.paginacion(procesoPaginado);
-        }
-
-        /// Segmentación
-        if (metodo == 5) {
-            if (this.getMemoriaDisponible() == 0) {
-                return 0;
-            }
-            if (this.getMemoriaDisponible() < proceso.tamano) {
-                return 1;
-            }
-
-            return this.segmentarProceso(proceso, seleccionAjuste);
-        }
-
         /// Metodo estatico fijo
         if (metodo == 4) {
             return this.estaticaFija(proceso);
@@ -162,16 +137,7 @@ class Memoria {
             resultado = this.mejorAjuste(proceso);
         }
 
-        /// Evalua los metodos de dinamica
-        if (metodo == 1 || metodo == 2) {
-            /// Sí hubi algún error en el llenadod el proceso
-            if (resultado == 1 || resultado == 0) {
-                return resultado;
-            }
-            return this.dividirMemoria();
-        }
-
-        return resultado;
+        
     }
 
     primerAjuste(proceso) {
@@ -279,30 +245,7 @@ class Memoria {
         return 0;
     }
 
-    paginacion(paginasProceso) {
-        for (let index2 = 0; index2 < paginasProceso.length; index2++) {
-            for (let index = 0; index < this.segmentos.length; index++) {
-                const segmento = this.segmentos[index];
 
-                if (segmento.proceso === null) {
-                    this.segmentos[index].proceso = paginasProceso[index2];
-                    break;
-                }
-            }
-        }
-        return this.segmentos;
-
-    }
-
-    paginarProceso(proceso, tamanoPagina) {
-        var pagProceso = Math.ceil(proceso.tamano / tamanoPagina);
-        var arrProcesos = [];
-
-        for (let index = 0; index < pagProceso; index++) {
-            arrProcesos.push({ "id": proceso.id, "nombre": proceso.nombre + index, "tamano": tamanoPagina });
-        }
-        return arrProcesos;
-    }
 
     segmentarProceso(proceso, seleccionAjuste) {
         var resultado = null;

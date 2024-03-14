@@ -128,25 +128,6 @@ function llenarEjecutados() {
     };
 }
 
-function llenarMarcos() {
-    document.getElementById("marcos").replaceChildren();
-
-    var segmentos = memoria.getSegmentos();
-    for (let i = 0; i < segmentos.length; i++) {
-
-        var libre = 1;
-        if (segmentos[i].proceso == null) {
-            libre = 0;
-        }
-
-        const idHex = componentToHex(i);
-        var fila = "<tr><td>" + idHex + "</td><td>0x" + idHex + segmentos[i].posicion + "</td><td>" + libre + "</td></tr>";
-
-        var btn = document.createElement("TR");
-        btn.innerHTML = fila;
-        document.getElementById("marcos").appendChild(btn);
-    };
-}
 
 function llenarLibres() {
     document.getElementById("libres").replaceChildren();
@@ -161,54 +142,6 @@ function llenarLibres() {
     };
 }
 
-function llenarSegmentos() {
-    document.getElementById("segmentos").replaceChildren();
-
-
-    document.getElementById("ejecucion").replaceChildren();
-    for (let i = 0; i < segmentosEjecutados.length; i++) {
-        const programa = segmentosEjecutados[i];
-
-        var fila = "<tr><td>" + programa.id + "</td><td>" + programa.nombre +  "</td><td>" + programa.parte + "</td><td>" +programa.tamano + "</td><td>0x" + programa.posicion + "</td><td><button class='btn btnApagar'" + " value='" + i + "'>Apagar</button>" + "</td></tr>";
-
-        var btn = document.createElement("TR");
-        btn.innerHTML = fila;
-        document.getElementById("segmentos").appendChild(btn);
-    };
-}
-
-function llenarTpps(){
-    document.getElementById("tpps").replaceChildren();
-
-    for (let i = 0; i < programasTTP.length; i++) {
-        const programa = programasTTP[i];
-        console.log(programasTTP);
-        var marco = determinarMarco(programa.nombre, programa.id);
-
-        var fila = "<tr><td>" + programa.id + "</td><td>" + programa.nombre + "</td><td>" + programa.pagina + "</td><td>"+ componentToHex(marco) +"</td><td>"+"<button class='btn btnApagar'" + " value='" + i + "'>Apagar</button>" + "</tr>";
-        
-        var btn = document.createElement("TR");
-        btn.innerHTML = fila;
-        document.getElementById("tpps").appendChild(btn);
-    }
-}
-
-function determinarMarco(nombreProceso, idProceso){
-    
-    var segmentos = memoria.getSegmentos();
-    var marco = 0;
-
-    for (let index = 0; index < segmentos.length; index++){
-        if(segmentos[index].proceso == null){
-            console.log("null");
-        }else{
-            if (nombreProceso === segmentos[index].proceso.nombre && idProceso === segmentos[index].proceso.id){
-                return marco = index;
-            }
-        }
-    } 
-    
-}
 
 function limpiarMemoria() {
     var canvas = document.getElementById("memoria");
@@ -419,58 +352,9 @@ function agregarListener() {
         ejecutarProceso($tds);
     });
 
-    //// Detener programas en ejecución segmentacion
-    $('#tablaSegemetnos').on('click','.btnApagar', function (event){
-        limpiarMemoria();
-        dibujarMemoria(1, 4);
-        dibujarProceso("000000", "SO", 1048576);
-
-        var $row = $(this).closest("tr"),
-            $tds = $row.find("td");
-
-        memoria.eliminarProcesoPag($tds[0].textContent);
-
-        segmentosEjecutados = removeItemFromArr(segmentosEjecutados, $tds[0].textContent);
-
-        llenarSegmentos();
-        llenarLibres();
-
-        dibujarProcesos();
-    })
-
-    //// Detener programas en ejecución paginación
-    $('#tablaTPP').on('click','.btnApagar', function (event) {
-        limpiarMemoria();
-
-        var tamPagina = document.getElementsByName("tamanoPagina");
-        const mega = 1048576;
-        var cantParticiones = (mega * 15) / tamPagina[0].value;
-
-        dibujarMemoria(cantParticiones, gestionMemoria);
 
 
-        dibujarProceso("000000", "SO", 1048576);
-
-        var $row = $(this).closest("tr"),
-            $tds = $row.find("td");
-
-        memoria.eliminarProcesoPag($tds[0].textContent);
-
-        programasTTP = removeItemFromArr(programasTTP, $tds[0].textContent);
-
-        for (let index = 0; index < programasTTP.length; index++) {
-            const element = programasTTP[index];
-            var proceso = memoria.getProceso(element.id);
-            element.posicion = proceso[0].posicion;
-        }
-
-        llenarMarcos();
-
-        llenarTpps();
-
-        dibujarProcesos();
-    })
-
+   
     //// Detener prorgamas en ejecución
     $('#tablaEjecutados').unbind('click');
     $('#tablaEjecutados').on('click', '.btnApagar', function (event) {
@@ -514,30 +398,6 @@ function agregarListener() {
     optMetodo.addEventListener("click", function () {
         var ordenamiento = document.getElementsByName("ordenamiento");
         switch (optMetodo.value) {
-            case "1":
-                console.log("Particionamiento Dinamico Con Compactacion");
-                gestionMemoria = 1;
-                $("#contMetodos").hide();
-                $(".ordenamiento").show();
-                mostrarTablasPag(false);
-                mostrarTablasSeg(false);
-
-                ordenamiento[0].disabled = false;
-                ordenamiento[1].disabled = false;
-                ordenamiento[2].disabled = false;
-                break;
-            case "2":
-                console.log("Particionamiento Dinamico Sin Compactacion");
-                gestionMemoria = 2;
-                $("#contMetodos").hide();
-                $(".ordenamiento").show();
-                mostrarTablasPag(false);
-                mostrarTablasSeg(false);
-
-                ordenamiento[0].disabled = false;
-                ordenamiento[1].disabled = false;
-                ordenamiento[2].disabled = false;
-                break;
             case "3":
                 console.log("Particionamiento Estatico Variable");
                 gestionMemoria = 3;
@@ -579,38 +439,7 @@ function agregarListener() {
                 ordenamiento[2].disabled = true;
 
                 break;
-            case "5":
-                console.log("Segmentacion");
-                gestionMemoria = 5;
-                $("#contMetodos").hide();
-                $(".ordenamiento").show();
-                mostrarTablasPag(false);
-                mostrarTablasSeg(true);
-
-                ordenamiento[0].disabled = false;
-                ordenamiento[1].disabled = false;
-                ordenamiento[2].disabled = false;
-
-                break;
-            case "6":
-                console.log("Paginacion");
-                gestionMemoria = 6;
-                $("#contMetodos").show();
-                $(".ordenamiento").hide();
-                mostrarTablasSeg(false);
-                mostrarTablasPag(true);
-
-                document.getElementById("contMetodos").replaceChildren();
-                const confPagina = "<div>Tamaño de la pagina</div>" +
-                    "<input type='text' name='tamanoPagina' id='tamanoPagina' autocomplete='off' placeholder='Tamano en Bytes'>" + "</input>";
-                var btn = document.createElement("DIV");
-                btn.innerHTML = confPagina;
-                document.getElementById("contMetodos").appendChild(btn);
-
-                ordenamiento[0].disabled = true;
-                ordenamiento[1].disabled = true;
-                ordenamiento[2].disabled = true;
-                break;
+        
             default:
                 $(".ordenamiento").hide();
                 $("#contMetodos").hide();
