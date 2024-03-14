@@ -386,12 +386,9 @@ class Memoria {
 }
 
 class Proceso {
-    constructor(id, nombre, bss, data, text, tamano, posicion) {
+    constructor(id, nombre, tamano, posicion) {
         this.id = id
         this.nombre = nombre
-        this.bss = bss
-        this.data = data
-        this.text = text
         this.tamano = tamano
         this.posicion = posicion
     }

@@ -15,12 +15,12 @@ var programas = [{
     "tamano": 1048576 / 2,
 },
 {
-    "nombre": "Proceso",
-    "tamano": 1048576 * 6,
+    "nombre": "Proceso 5",
+    "tamano": 1048576 * 4,
 },
 ]
 
-var particionesVariables = [1, 2, 2, 3, 3, 4]
+var particionesVariables = [3, 0.5, 1.5, 2, 6, 1,1 ]
 var gestionMemoria = 0;
 var programasEjecutados = [];
 var segmentosEjecutados = [];
@@ -52,29 +52,11 @@ function mostrarTablasSeg(mostrar) {
         $("#tituloEjecutados").hide();
         $(".contenedorTablaEjecutados").hide();
 
-        $("#tituloSegmentacion").show();
-        $("#tablaSegemetnos").show();
-        $(".contenedorTablaSegmentos").show();
-        $("#tituloLibres").show();
-        $("#tablaLibres").show();
-        $(".contenedorTablaLibres").show();
-
-        $("#tituloMarcos").hide();
-        $("#tablaMarcos").hide();
-        $(".contenedorTablaMarcos").hide();
-        $("#tituloTPP").hide();
-        $("#tablaTPP").hide();
-        $(".contenedorTablaTPP").hide();
+       
     } else {
         $("#tituloEjecutados").show();
         $(".contenedorTablaEjecutados").show();
 
-        $("#tituloSegmentacion").hide();
-        $("#tablaSegemetnos").hide();
-        $(".contenedorTablaSegmentos").hide();
-        $("#tituloLibres").hide();
-        $("#tablaLibres").hide();
-        $(".contenedorTablaLibres").hide();
     }
 }
 
@@ -83,29 +65,10 @@ function mostrarTablasPag(mostrar) {
         $("#tituloEjecutados").hide();
         $(".contenedorTablaEjecutados").hide();
 
-        $("#tituloSegmentacion").hide();
-        $("#tablaSegemetnos").hide();
-        $(".contenedorTablaSegmentos").hide();
-        $("#tituloLibres").hide();
-        $("#tablaLibres").hide();
-        $(".contenedorTablaLibres").hide();
-
-        $("#tituloMarcos").show();
-        $("#tablaMarcos").show();
-        $(".contenedorTablaMarcos").show();
-        $("#tituloTPP").show();
-        $("#tablaTPP").show();
-        $(".contenedorTablaTPP").show();
+       
     } else {
         $("#tituloEjecutados").show();
         $(".contenedorTablaEjecutados").show();
-
-        $("#tituloMarcos").hide();
-        $("#tablaMarcos").hide();
-        $(".contenedorTablaMarcos").hide();
-        $("#tituloTPP").hide();
-        $("#tablaTPP").hide();
-        $(".contenedorTablaTPP").hide();
     }
 }
 
@@ -127,21 +90,6 @@ function llenarEjecutados() {
         document.getElementById("ejecucion").appendChild(btn);
     };
 }
-
-
-function llenarLibres() {
-    document.getElementById("libres").replaceChildren();
-
-    var segmentos = memoria.getSegmentosLibres();
-    for (let i = 0; i < segmentos.length; i++) {
-        var fila = "<tr><td>" + segmentos[i].tamano + "</td><td>0x" +  segmentos[i].posicion + "</td></tr>";
-
-        var btn = document.createElement("TR");
-        btn.innerHTML = fila;
-        document.getElementById("libres").appendChild(btn);
-    };
-}
-
 
 function limpiarMemoria() {
     var canvas = document.getElementById("memoria");
@@ -298,12 +246,7 @@ function ejecutarProgramas() {
     $('#tablaEjecutados').on('click', '.btnApagar', function (event) {
         limpiarMemoria();
         switch (gestionMemoria) {
-            case 1:
-                dibujarMemoria(1, 4);
-                break;
-            case 2:
-                dibujarMemoria(1, 4);
-                break;
+           
             case 3:
                 dibujarMemoria(particionesVariables.length, gestionMemoria);
                 break;
@@ -426,7 +369,7 @@ function ejecutarProceso(proceso) {
             segmentosEjecutados.push({"id": idProceso, "nombre": proceso[0].textContent, "parte": parte[1], "tamano": procesog.tamano, "posicion": procesog.posicion});
         });
         llenarSegmentos();
-        llenarLibres();
+      
     }
 
     if (gestionMemoria == 6) {
