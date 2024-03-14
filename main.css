@@ -8,6 +8,27 @@ body {
 .tabla {
   background-color: #ffffff; /* Fondo blanco para la tabla */
   color: #333; /* Color de texto oscuro */
+  width: 100%; /* Ancho total de la tabla */
+}
+
+.tabla th,
+.tabla td {
+  padding: 8px; /* Espacio interno en las celdas */
+}
+
+.tabla th:nth-child(1), /* Ajusta el ancho de la primera columna */
+.tabla td:nth-child(1) {
+  width: 40%; /* Puedes ajustar este valor según sea necesario */
+}
+
+.tabla th:nth-child(2), /* Ajusta el ancho de la segunda columna */
+.tabla td:nth-child(2) {
+  width: 30%; /* Puedes ajustar este valor según sea necesario */
+}
+
+.tabla th:nth-child(3), /* Ajusta el ancho de la tercera columna */
+.tabla td:nth-child(3) {
+  width: 30%; /* Puedes ajustar este valor según sea necesario */
 }
 
 thead {

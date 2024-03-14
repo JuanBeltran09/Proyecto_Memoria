@@ -1,21 +1,21 @@
 var programas = [{
-    "nombre": "Word",
+    "nombre": "Proceso 1",
     "tamano": 1048576,
 },
 {
-    "nombre": "Excel",
+    "nombre": "Proceso 2",
     "tamano": 1048576 * 2,
 },
 {
-    "nombre": "NetBeans",
+    "nombre": "Proceso 3",
     "tamano": 1048576 * 3,
 },
 {
-    "nombre": "Sublime Text",
+    "nombre": "Proceso 4",
     "tamano": 1048576 / 2,
 },
 {
-    "nombre": "Android Studio",
+    "nombre": "Proceso",
     "tamano": 1048576 * 6,
 },
 ]
@@ -227,103 +227,54 @@ function activarBotones(botones) {
         boton.disabled = false;
     }
 }
+function empezarPrograma() {
+    var seleccionAjuste = $('input:radio[name=ordenamiento]:checked').val();
+    var botones = document.getElementsByName("btnEncender");
+    memoria = new Memoria(1048576 * 15, null);
+    programasEjecutados = [];
+    llenarEjecutados();
+    idProceso = 0;
 
-function agregarListener() {
-    //// Empezar el programa 
-    var btnEmpezar = document.getElementById("empezar");
-    btnEmpezar.addEventListener("click", function () {
-        var seleccionAjuste = $('input:radio[name=ordenamiento]:checked').val();
-        var botones = document.getElementsByName("btnEncender");
-        memoria = new Memoria(1048576 * 15, null);
-        programasEjecutados = [];
-        llenarEjecutados();
-        idProceso = 0;
-
-        switch (gestionMemoria) {
-
-            case 1:
-                if (seleccionAjuste != undefined) {
-                    limpiarMemoria();
-                    dibujarMemoria(1, 4);
-
-                    dibujarProceso("000000", "SO", 1048576);
-                    activarBotones(botones);
-                } else {
-                    alert("Debe seleccionar un tipo de ajuste");
-                }
-                break;
-            case 2:
-                if (seleccionAjuste != undefined) {
-                    limpiarMemoria();
-                    dibujarMemoria(1, 4);
-
-                    dibujarProceso("000000", "SO", 1048576);
-                    activarBotones(botones);
-                } else {
-                    alert("Debe seleccionar un tipo de ajuste");
-                }
-                break;
-            case 3:
-                if (seleccionAjuste != undefined) {
-                    limpiarMemoria();
-                    dibujarMemoria(particionesVariables.length, gestionMemoria);
-
-                    memoria.setMetodoVariable(particionesVariables);
-
-                    dibujarProceso("000000", "SO", 1048576);
-                    activarBotones(botones);
-                } else {
-                    alert("Debe seleccionar un tipo de ajuste");
-                }
-                break;
-            case 4:
-                var cantParticion = document.getElementsByName("cantidadParticiones");
+    switch (gestionMemoria) {
+        case 3:
+            if (seleccionAjuste != undefined) {
                 limpiarMemoria();
-                if (cantParticion[0].value != "") {
-                    dibujarMemoria(cantParticion[0].value, gestionMemoria);
+                dibujarMemoria(particionesVariables.length, gestionMemoria);
 
-                    memoria.setMetodoFija(parseInt(cantParticion[0].value));
+                memoria.setMetodoVariable(particionesVariables);
 
-                    dibujarProceso("000000", "SO", 1048576);
-                    activarBotones(botones);
-                } else {
-                    alert("Debe ingresar el número de particiones")
-                }
-                break;
-            case 5:
-                if (seleccionAjuste != undefined) {
-                    limpiarMemoria();
-                    dibujarMemoria(1, 4);
+                dibujarProceso("000000", "SO", 1048576);
+                ejecutarProgramas(); // Llama a la función para ejecutar los programas automáticamente
+            } else {
+                alert("Debe seleccionar un tipo de ajuste");
+            }
+            break;
+        case 4:
+            var cantParticion = document.getElementsByName("cantidadParticiones");
+            limpiarMemoria();
+            if (cantParticion[0].value != "") {
+                dibujarMemoria(cantParticion[0].value, gestionMemoria);
 
-                    dibujarProceso("000000", "SO", 1048576);
-                    activarBotones(botones);
-                } else {
-                    alert("Debe seleccionar un tipo de ajuste");
-                }
-                break;
-            case 6:
-                var tamPagina = document.getElementsByName("tamanoPagina");
-                const mega = 1048576;
-                if (tamPagina[0].value != "") {
-                    limpiarMemoria();
+                memoria.setMetodoFija(parseInt(cantParticion[0].value));
 
-                    var cantParticiones = (mega * 15) / tamPagina[0].value;
+                dibujarProceso("000000", "SO", 1048576);
+                ejecutarProgramas(); // Llama a la función para ejecutar los programas automáticamente
+            } else {
+                alert("Debe ingresar el número de particiones")
+            }
+            break;
+        // Otros casos para otros métodos de gestión de memoria si es necesario
+    }
+    this.colores = [];
+}
 
-                    dibujarMemoria(cantParticiones, gestionMemoria);
-                    memoria.setMetodoFija(parseInt(cantParticiones));
-
-                    dibujarProceso("000000", "SO", 1048576);
-                    activarBotones(botones);
-                } else {
-                    alert("Debe llenar el tamaño de la pagina");
-                }
-                break;
-            default:
-                alert("Debe seleccionar un método de gestión de memoria");
-                limpiarMemoria();
-        }
-        this.colores = [];
-    })
+// Función para ejecutar los programas automáticamente
+function ejecutarProgramas() {
+    var botones = document.getElementsByName("btnEncender");
+    for (let i = 0; i < botones.length; i++) {
+        ejecutarProceso(botones[i].parentNode.parentNode.cells); // Llama a la función ejecutarProceso para cada botón de encendido
+    }
+}
 
     //// Acción para crear un programa
     var btnNuevoPrograma = document.getElementById("nuevoPrograma");
@@ -342,19 +293,6 @@ function agregarListener() {
         }
     }, false)
 
-
-    //// Acción para ejecutar programas existentes
-    $('#tablaProgramas').unbind('click');
-    $('#tablaProgramas').on('click', '.btnEncender', function (event) {
-        var $row = $(this).closest("tr");
-        var $tds = $row.find("td");
-
-        ejecutarProceso($tds);
-    });
-
-
-
-   
     //// Detener prorgamas en ejecución
     $('#tablaEjecutados').unbind('click');
     $('#tablaEjecutados').on('click', '.btnApagar', function (event) {
@@ -448,7 +386,7 @@ function agregarListener() {
 
         }
     }, false);
-}
+
 
 function ejecutarProceso(proceso) {
     var seleccionAjuste = $('input:radio[name=ordenamiento]:checked').val();
@@ -514,6 +452,9 @@ function dibujarProcesos() {
         }
     });
 }
+
+var btnEmpezar = document.getElementById("empezar");
+btnEmpezar.addEventListener("click", empezarPrograma);
 
 function init() {
     llenarProgramas();
